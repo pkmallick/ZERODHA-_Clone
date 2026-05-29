@@ -1,2 +1,9 @@
 # ZERODHA-_Clone
-This is  a Demo for Git and GitHub class.
+# Author
+Prakash Kumar Mallick
+GitHub:
+https://github.com/pkmallick
+
+Project Repository:
+https://github.com/pkmallick/ZERODHA-_Clone
+
