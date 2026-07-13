@@ -274,11 +274,10 @@ Skills:
 * Spring Boot
 
 GitHub:
-(Add your GitHub profile link)
+https://github.com/pkmallick/ZERODHA-_Clone.git
 
 LinkedIn:
-(Add your LinkedIn profile link)
-
+www.linkedin.com/in/prakash-kumar-mallick-26bbaa2a3
 ---
 
 # ⭐ If you like this project
