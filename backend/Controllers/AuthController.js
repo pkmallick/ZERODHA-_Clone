@@ -1,201 +1,366 @@
-/*const User = require("../model/UserModel");
-const { createSecretToken } = require("../util/SecretToken");
-const bcrypt = require("bcryptjs");
+// //SECOND EDIT
 
-const cookieOptions = {
-  httpOnly: true,                 // Cannot be accessed by JS
-  secure: process.env.NODE_ENV === "production", // HTTPS only in production
-  sameSite: "Lax",                // Protect from CSRF
-  maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days in ms
-};
+// const User = require("../model/UserModel");
+// const { createSecretToken } = require("../util/SecretToken");
+// const bcrypt = require("bcryptjs");
 
-module.exports.Signup = async (req, res) => {
-  try {
-   console.log("REQ BODY=>", req.body);
-    const { email, username, password } = req.body;
+// const cookieOptions = {
+//   httpOnly: true,
+//   secure: process.env.NODE_ENV === "production",
+//   sameSite: "Lax",
+//   maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+// };
 
-    if (!email || !username || !password) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
+// // ================= SIGNUP =================
+// module.exports.Signup = async (req, res) => {
+//   try {
+//     console.log("REQ BODY =>", req.body);
 
-    // Check existing user
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
+//     const { email, username, password } = req.body;
 
-    // Create user (password auto-hashed by pre-save hook)
-    const user = await User.create({ email, username, password });
+//     if (!email || !username || !password) {
+//       return res.status(400).json({ message: "All fields are required" });
+//     }
 
-    // Create token
-    const token = createSecretToken(user._id);
+//     // check if user already exists
+//     const existingUser = await User.findOne({ email });
 
- // Set cookie
+//     if (existingUser) {
+//       return res.status(400).json({ message: "User already exists" });
+//     }
 
-    res.cookie("token", token, cookieOptions);
+//     // create new user
+//     const user = await User.create({ email, username, password });
 
-    // Exclude password from response
-    const { password: pwd, ...safeUser } = user._doc;
+//     const token = createSecretToken(user._id);
 
-    res.status(201).json({
-      message: "User signed up successfully",
-      success: true,
-      user: safeUser,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
+//     res.cookie("token", token, cookieOptions);
 
-module.exports.Login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+//     // remove password from response
+//     const { password: pwd, ...safeUser } = user._doc;
 
-    if (!email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
+//     res.status(201).json({
+//       success: true,
+//       message: "User signed up successfully",
+//       user: safeUser,
+//     });
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ message: "Incorrect email or password" });
-    }
+//   } catch (err) {
+//     console.error("SIGNUP ERROR:", err);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Incorrect email or password" });
-    }
 
-    const token = createSecretToken(user._id);
+// // ================= LOGIN =================
+// module.exports.Login = async (req, res) => {
+//   try {
 
-    res.cookie("token", token, cookieOptions);
+//     const { email, password } = req.body;
 
-    res.status(200).json({
-      message: "User logged in successfully",
-      success: true,
-      user: { id: user._id, username: user.username, email: user.email },
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
+//     if (!email || !password) {
+//       return res.status(400).json({ message: "All fields are required" });
+//     }
 
-module.exports.Logout = (req, res) => {
-  res.cookie("token", "", {
-    httpOnly: true,
-    expires: new Date(0), // Expire immediately
-  });
-  res.status(200).json({ message: "Logged out successfully" });
-};*/
+//     // IMPORTANT: include password
+//     const user = await User.findOne({ email }).select("+password");
 
-//SECOND EDIT
+//     if (!user) {
+//       return res.status(401).json({ message: "Incorrect email or password" });
+//     }
+
+//     const isMatch = await bcrypt.compare(password, user.password);
+
+//     if (!isMatch) {
+//       return res.status(401).json({ message: "Incorrect email or password" });
+//     }
+
+//     const token = createSecretToken(user._id);
+
+//     res.cookie("token", token, cookieOptions);
+
+//     res.status(200).json({
+//       success: true,
+//       message: "User logged in successfully",
+//       user: {
+//         id: user._id,
+//         username: user.username,
+//         email: user.email,
+//       },
+//     });
+
+//   } catch (err) {
+//     console.error("LOGIN ERROR:", err);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+
+// // ================= LOGOUT =================
+// module.exports.Logout = (req, res) => {
+
+//   res.cookie("token", "", {
+//     httpOnly: true,
+//     expires: new Date(0),
+//   });
+
+//   res.status(200).json({
+//     message: "Logged out successfully",
+//   });
+// };
+
+
+// 3rd edit
+// 
 
 const User = require("../model/UserModel");
-const { createSecretToken } = require("../util/SecretToken");
 const bcrypt = require("bcryptjs");
+const { createSecretToken } = require("../util/SecretToken");
+
 
 const cookieOptions = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "Lax",
-  maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+
+    httpOnly:true,
+
+    secure:false,
+
+    sameSite:"lax",
+
+    maxAge:
+    3 * 24 * 60 * 60 * 1000
 };
+
 
 // ================= SIGNUP =================
-module.exports.Signup = async (req, res) => {
-  try {
-    console.log("REQ BODY =>", req.body);
 
-    const { email, username, password } = req.body;
+const Signup = async(req,res)=>{
 
-    if (!email || !username || !password) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
+try{
 
-    // check if user already exists
-    const existingUser = await User.findOne({ email });
+const {
+    username,
+    email,
+    password
+}=req.body;
 
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
 
-    // create new user
-    const user = await User.create({ email, username, password });
+if(!username || !email || !password){
 
-    const token = createSecretToken(user._id);
+return res.status(400).json({
 
-    res.cookie("token", token, cookieOptions);
+success:false,
 
-    // remove password from response
-    const { password: pwd, ...safeUser } = user._doc;
+message:"All fields required"
 
-    res.status(201).json({
-      success: true,
-      message: "User signed up successfully",
-      user: safeUser,
-    });
+});
 
-  } catch (err) {
-    console.error("SIGNUP ERROR:", err);
-    res.status(500).json({ message: "Internal server error" });
-  }
+}
+
+
+
+const exists =
+await User.findOne({email});
+
+
+if(exists){
+
+return res.status(400).json({
+
+success:false,
+
+message:"User already exists"
+
+});
+
+}
+
+
+
+const user =
+await User.create({
+
+username,
+email,
+password
+
+});
+
+
+
+const token =
+createSecretToken(user._id);
+
+
+
+res.cookie(
+"token",
+token,
+cookieOptions
+);
+
+
+
+return res.status(201).json({
+
+success:true,
+
+message:"Signup successful",
+
+user:{
+id:user._id,
+username:user.username,
+email:user.email
+}
+
+});
+
+
+}
+
+catch(err){
+
+console.log(err);
+
+
+return res.status(500).json({
+
+success:false,
+
+message:"Signup failed"
+
+});
+
+}
+
 };
+
+
 
 
 // ================= LOGIN =================
-module.exports.Login = async (req, res) => {
-  try {
 
-    const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
+const Login = async(req,res)=>{
 
-    // IMPORTANT: include password
-    const user = await User.findOne({ email }).select("+password");
+try{
 
-    if (!user) {
-      return res.status(401).json({ message: "Incorrect email or password" });
-    }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+const {
+email,
+password
+}=req.body;
 
-    if (!isMatch) {
-      return res.status(401).json({ message: "Incorrect email or password" });
-    }
 
-    const token = createSecretToken(user._id);
 
-    res.cookie("token", token, cookieOptions);
+const user =
+await User.findOne({email})
+.select("+password");
 
-    res.status(200).json({
-      success: true,
-      message: "User logged in successfully",
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-      },
-    });
 
-  } catch (err) {
-    console.error("LOGIN ERROR:", err);
-    res.status(500).json({ message: "Internal server error" });
-  }
+
+if(!user){
+
+return res.status(401).json({
+
+success:false,
+
+message:"Invalid email or password"
+
+});
+
+}
+
+
+
+const match =
+await bcrypt.compare(
+password,
+user.password
+);
+
+
+
+if(!match){
+
+return res.status(401).json({
+
+success:false,
+
+message:"Invalid email or password"
+
+});
+
+}
+
+
+
+const token =
+createSecretToken(user._id);
+
+
+
+res.cookie(
+"token",
+token,
+cookieOptions
+);
+
+
+
+return res.status(200).json({
+
+success:true,
+
+message:"Login successful",
+
+user:{
+id:user._id,
+username:user.username,
+email:user.email
+}
+
+});
+
+
+}
+
+catch(err){
+
+console.log(err);
+
+
+res.status(500).json({
+
+success:false,
+
+message:"Login failed"
+
+});
+
+}
+
 };
 
 
+
 // ================= LOGOUT =================
-module.exports.Logout = (req, res) => {
 
-  res.cookie("token", "", {
-    httpOnly: true,
-    expires: new Date(0),
-  });
+const Logout=(req,res)=>{
 
-  res.status(200).json({
-    message: "Logged out successfully",
-  });
+
+res.clearCookie("token");
+
+
+res.json({
+
+success:true,
+
+message:"Logout successful"
+
+});
+};
+module.exports={
+Signup,
+Login,
+Logout
 };

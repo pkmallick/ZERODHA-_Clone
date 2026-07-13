@@ -32,12 +32,32 @@ router.get("/verify", userVerification, (req, res) => {
 module.exports = router;*/
 
 //THIRD EDIT
+// const router = require("express").Router();
+
+// const { Signup, Login, Logout } = require("../Controllers/AuthController");
+
+// router.post("/signup", Signup);
+// router.post("/login", Login);
+// router.post("/logout", Logout);
+
+// module.exports = router;
+
+// 4th edit
+
 const router = require("express").Router();
 
-const { Signup, Login, Logout } = require("../Controllers/AuthController");
+const {
+    Signup,
+    Login,
+    Logout
+} = require("../Controllers/AuthController");
+
 
 router.post("/signup", Signup);
+
 router.post("/login", Login);
+
 router.post("/logout", Logout);
+
 
 module.exports = router;

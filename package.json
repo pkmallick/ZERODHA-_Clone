@@ -1,6 +1,13 @@
 {
-  "dependencies": {
-    "react-router-dom": "^7.11.0",
-    "React-router-dom": "^7.11.0"
+  "name": "zerodha-clone",
+  "private": true,
+  "scripts": {
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm start",
+    "dashboard": "cd dashboard && npm start",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\" \"npm run dashboard\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
