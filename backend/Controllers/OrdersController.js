@@ -1,43 +1,65 @@
 const { OrdersModel } = require("../model/OrdersModel");
 
-// Get all orders
+// =========================
+// GET ALL ORDERS
+// =========================
 const getOrders = async (req, res) => {
   try {
     const orders = await OrdersModel.find({});
-    res.status(200).json(orders);
+
+    return res.status(200).json({
+      success: true,
+      orders,
+    });
   } catch (error) {
     console.error("Error fetching orders:", error);
-    res.status(500).json({
+
+    return res.status(500).json({
       success: false,
       message: "Unable to fetch orders",
+      error: error.message,
     });
   }
 };
 
-// Create new order
+// =========================
+// CREATE NEW ORDER
+// =========================
 const createOrder = async (req, res) => {
   try {
+    console.log("Incoming Order:", req.body);
+
     const { name, qty, price, mode } = req.body;
+
+    // Validate request
+    if (!name || !qty || price === undefined || !mode) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required.",
+      });
+    }
 
     const newOrder = new OrdersModel({
       name,
-      qty,
-      price,
+      qty: Number(qty),
+      price: Number(price),
       mode,
     });
 
-    await newOrder.save();
+    const savedOrder = await newOrder.save();
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Order placed successfully",
-      order: newOrder,
+      order: savedOrder,
     });
   } catch (error) {
     console.error("Error placing order:", error);
-    res.status(500).json({
+
+    return res.status(500).json({
       success: false,
       message: "Unable to place order",
+      error: error.message,
     });
   }
 };

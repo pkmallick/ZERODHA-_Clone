@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-
-
 function Login() {
 
   const [data, setData] = useState({
@@ -18,8 +16,6 @@ function Login() {
     });
 
   };
-
-
   const handleSubmit = async (e) => {
 
     e.preventDefault();
@@ -29,7 +25,8 @@ function Login() {
 
       const res = await axios.post(
         "http://localhost:3002/api/auth/login",
-        data,
+      
+       data,
         {
           withCredentials: true,
         }
@@ -42,8 +39,9 @@ function Login() {
 
 
         // Redirect to separate Dashboard React app
-        window.location.href = "http://localhost:3001/dashboard";
-      } else {
+      window.location.href = "http://localhost:3001/dashboard";
+    
+    } else {
 
         alert(
           res.data.message || "Login failed"
@@ -55,8 +53,6 @@ function Login() {
     } catch (err) {
 
       console.error(err);
-
-
       alert(
         err.response?.data?.message ||
         "Login failed. Please try again."
@@ -66,20 +62,11 @@ function Login() {
 
   };
 
-
-
   return (
 
     <div className="container mt-5">
-
-
       <h2>Login</h2>
-
-
-
       <form onSubmit={handleSubmit}>
-
-
         <input
 
           className="form-control mb-3"
@@ -97,9 +84,6 @@ function Login() {
           required
 
         />
-
-
-
         <input
 
           className="form-control mb-3"
@@ -139,3 +123,4 @@ function Login() {
 }
 
 export default Login;
+

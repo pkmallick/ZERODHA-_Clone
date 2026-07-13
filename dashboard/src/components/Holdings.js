@@ -104,6 +104,7 @@
 
 // export default Holdings;
 
+// 2n edition
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import VerticalGraph from "./VerticalGraph";

@@ -47,6 +47,7 @@
 
 // export default Positions;
 
+//2nd edit
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -55,9 +56,12 @@ const Positions = () => {
 
   useEffect(() => {
     const fetchPositions = async () => {
-      try {
-        const res = await axios.get("http://localhost:3002/api/positions", {
-          withCredentials: true,
+       try {
+        const res = await 
+        axios.get("http://localhost:3002/api/positions", 
+        { 
+
+        withCredentials: true,
         });
 
         setPositions(res.data);
@@ -124,3 +128,4 @@ const Positions = () => {
 };
 
 export default Positions;
+
